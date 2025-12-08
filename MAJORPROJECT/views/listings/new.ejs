@@ -1,0 +1,80 @@
+<% layout("/layouts/boilerpalte.ejs") %>
+
+<div class="row">
+    <div class="col-8 offset-2">
+        <br><br>
+    <h3> Create New Listing</h3>
+    <form method="POST" action="/Listings" novalidate class="needs-validation" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="title" class="form-label"> Title</label>
+        <input name="Listing[title]" placeholder="Add Catchy Title" type="text" class="form-control" required> 
+        <div class="valid-feedback">
+      Looks good!
+    </div>
+        </div>
+
+        <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea 
+        id="description"
+        name="Listing[description]" 
+        placeholder="Enter description" 
+        class="form-control" 
+        required
+    ></textarea>
+    <div class="invalid-feedback">Please enter a short description</div>
+</div>
+
+       <div class="mb-3">
+            <label for="image" class="form-label">Upload Listing Image</label>
+        <input name="Listing[image]" type="file" class="form-control" > 
+        required
+       </div>
+
+
+        <div class="row">
+        <div class="mb-3 col-md-4">
+            <label for="price" class="form-label"> Price</label>
+        <input name="Listing[price]" placeholder="1,200/-"  class="form-control" required> 
+      <div class="invalid-feedback">price shoud be valid</div>
+    </div>
+        
+        <div class="mb-3 col-md-8">
+            <label for="location" class="form-label"> Location</label>
+        <input name="Listing[location]" placeholder="Nagpur,maharashtra" type="text" class="form-control"required> 
+       <div class="invalid-feedback">location shoud be valid</div>
+    </div>
+        </div>
+<div class="row">
+
+        <div class="mb-3 col-md-8">
+            <label for="country" class="form-label"> Country</label>
+        <input name="Listing[country]" placeholder="India" type="text" class="form-control" required> 
+        <div class="invalid-feedback">please enter valid country name</div>
+    </div>
+
+     <div class="mb-3 col-md-4">
+        <label for="category" class="form-label">Choose a category:</label><br>
+  <select name="Listing[category]" id="category" class="form-control">
+  <option value="Trending">Trending</option>
+  <option value="Castles">Castles</option>
+  <option value="Amazing Pools">Amazing Pools</option>
+  <option value="Camping">Camping</option>
+  <option value="Farms">Farms</option>
+  <option value="Artic">Artic</option>  
+    <option value="Boats">Boats</option>
+</select>
+    </div>
+
+    </div>
+
+        <div >
+        <button class="btn  add-btn"> Add </button>
+        </div>
+        <br><br>
+    </form>
+     
+    </div>
+    </div>
+
+

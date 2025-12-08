@@ -1,0 +1,25 @@
+<% layout("/layouts/boilerpalte.ejs") %>
+<div class="row">
+  <h1 class="col-6 offset-3">Login on NxtStay</h1>
+  <div class="col-6 offset-3">
+    <form method="POST" action="/login" novalidate class="needs-validation">
+
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input name="username" id="username" type="text" class="form-control" required>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input name="password" id="password" type="password" class="form-control" required>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div>
+        <button class="btn btn-success mt-4">Send</button>
+      </div>
+
+    </form>
+  </div>
+</div>

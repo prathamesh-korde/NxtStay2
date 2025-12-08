@@ -1,0 +1,66 @@
+<style>
+  .btn-search{
+  background-color: #fe424d;
+  color: #fff;
+  border-radius: 25px;
+  padding: 0 1rem 0 1rem;
+ }
+
+ .btn-search:hover{
+  background-color: #fe424d;
+  color: #fff;
+ }
+
+ .btn i{
+  display: inline;
+ }
+
+ .search-icon{
+  display: inline;
+  margin-right: 0.5rem;
+ }
+
+ .search-in{
+  border-radius: 25px;
+  padding: 0.5rem 3rem 0.5rem 3rem;
+  font-size: 1 rem;
+ }
+</style>
+
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/Listings"><i class="fa-regular fa-compass"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+       
+        <a class="nav-link" href="/Listings">Explore</a>
+    
+      </div>
+      
+      <!-- Search in navbar -->
+      <div class="navbar-nav ms-auto">
+  <form class="d-flex" role="search" action="/Listings" method="GET">
+    <input name="search" class="form-control me-2 search-in" type="search" placeholder="Search destination" aria-label="Search">
+    <button class="btn btn-search" type="submit"> <i class="fa-brands fa-searchengin search-icon"></i> Search</button>
+  </form>
+</div>
+
+      <div class="navbar-nav ms-auto"  >
+            <a class="nav-link" href="/Listings/new">NxtStay Your Home</a>
+        <% if(!Curruser){ %>
+          <a class="nav-link" href="/signup"><b>Sign up</b></a>
+        <a class="nav-link" href="/login"><b>Log in</b></a>
+        <% } %>
+        
+         <% if(Curruser){ %>
+        <a class="nav-link"  href="/logout"><b>Log out</b></a>
+        <% } %>
+
+      </div>
+
+    </div>
+  </div>
+</nav>
