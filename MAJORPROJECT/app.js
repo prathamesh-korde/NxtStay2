@@ -103,6 +103,38 @@ app.use((req, res, next) => {
 //   }
 // });
 
+// Gemini API Proxy Route
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { message, conversationHistory } = req.body;
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    
+    const systemContext = `You are a helpful assistant for NxtStay, a vacation rental platform similar to Airbnb. Help users with booking properties, listing their homes, searching destinations, and answering questions about the platform. Be friendly, concise, and helpful.`;
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            { role: 'user', parts: [{ text: systemContext }] },
+            ...conversationHistory,
+            { role: 'user', parts: [{ text: message }] }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+    const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not process that.';
+    res.json({ reply: botReply });
+  } catch (error) {
+    console.error('Chat API Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.use("/Listings",Listings);
 app.use("/listings/:id/reviews",reviews);
 app.use("/",UserRoute);
@@ -117,9 +149,13 @@ app.use((err,req,res,next) =>{
   res.status(status).render("listings/error.ejs",{message});
 })
 
-app.listen(8080, () => {
-  console.log("Server listening on port 8080");
-});
+if (process.env.VERCEL !== '1') {
+  app.listen(8080, () => {
+    console.log("Server listening on port 8080");
+  });
+}
+
+module.exports = app;
 
 
 
