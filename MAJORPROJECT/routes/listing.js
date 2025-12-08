@@ -20,7 +20,7 @@ router
 //create
 .post(islogin,validateListing,upload.single('Listing[image]'),wrapAsync(listingControler.createListing));
 router.get("/new",islogin,(req,res)=>{
-    res.render("Listings/new.ejs");
+    res.render("listings/new.ejs");
 })
 
 
