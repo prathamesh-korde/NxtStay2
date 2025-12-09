@@ -4,8 +4,7 @@ class NxtStayAIChatbot {
     constructor() {
         this.messages = [];
         this.isOpen = false;
-        this.GEMINI_API_KEY = 'AIzaSyBIvkNR3rDb7HelXEgWvQZOEvBFHcEog-g'; // API key (should be in backend)
-        this.GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${this.GEMINI_API_KEY}`;
+        // API key is securely stored in backend (.env file) and accessed via /api/chat route
         this.conversationHistory = []; // Stores conversation for context
         // System context - defines chatbot's role
         this.systemContext = `You are a helpful assistant for NxtStay, a vacation rental platform where people can book unique homes, apartments, and experiences worldwide - just like Airbnb but called NxtStay. Help users with searching, booking, listing properties, reviews, maps, categories, and account management. Be friendly and concise.`;
