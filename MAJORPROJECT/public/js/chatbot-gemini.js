@@ -1,11 +1,13 @@
-// NxtStay AI Chatbot with Gemini Integration
+// ===== NXTSTAY AI CHATBOT =====
+// AI-powered chatbot using Google Gemini API to help users with questions about NxtStay
 class NxtStayAIChatbot {
     constructor() {
         this.messages = [];
         this.isOpen = false;
-        this.GEMINI_API_KEY = 'AIzaSyBIvkNR3rDb7HelXEgWvQZOEvBFHcEog-g';
+        this.GEMINI_API_KEY = 'AIzaSyBIvkNR3rDb7HelXEgWvQZOEvBFHcEog-g'; // API key (should be in backend)
         this.GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${this.GEMINI_API_KEY}`;
-        this.conversationHistory = [];
+        this.conversationHistory = []; // Stores conversation for context
+        // System context - defines chatbot's role
         this.systemContext = `You are a helpful assistant for NxtStay, a vacation rental platform where people can book unique homes, apartments, and experiences worldwide - just like Airbnb but called NxtStay. Help users with searching, booking, listing properties, reviews, maps, categories, and account management. Be friendly and concise.`;
         
         this.init();
@@ -106,6 +108,8 @@ class NxtStayAIChatbot {
         }, 500);
     }
 
+    // ===== SEND MESSAGE TO AI =====
+    // Sends user message to Gemini API and displays response
     async sendMessage() {
         const input = document.getElementById('chatInput');
         const sendBtn = document.getElementById('chatSend');
@@ -123,6 +127,7 @@ class NxtStayAIChatbot {
         this.showTypingIndicator();
 
         try {
+            // Get AI response from Gemini
             const response = await this.getGeminiResponse(message);
             this.removeTypingIndicator();
             this.addBotMessage(response);
@@ -130,7 +135,7 @@ class NxtStayAIChatbot {
             console.error('Error getting Gemini response:', error);
             this.removeTypingIndicator();
             
-            // Provide helpful fallback responses based on the message
+            // Provide helpful fallback responses if API fails
             const fallbackResponse = this.getFallbackResponse(message);
             this.addBotMessage(fallbackResponse);
         } finally {

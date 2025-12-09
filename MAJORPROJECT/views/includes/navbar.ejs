@@ -27,8 +27,11 @@
  }
 </style>
 
+<!-- ===== NAVIGATION BAR ===== -->
+<!-- Responsive navbar with logo, search, and user menu -->
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
+    <!-- Logo / Home Link -->
     <a class="navbar-brand" href="/Listings"><i class="fa-regular fa-compass"></i></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -40,7 +43,8 @@
     
       </div>
       
-      <!-- Search in navbar -->
+      <!-- ===== SEARCH BAR ===== -->
+      <!-- Searches listings by title, location, or country -->
       <div class="navbar-nav ms-auto">
   <form class="d-flex" role="search" action="/Listings" method="GET">
     <input name="search" class="form-control me-2 search-in" type="search" placeholder="Search destination" aria-label="Search">
@@ -48,14 +52,17 @@
   </form>
 </div>
 
+      <!-- ===== USER AUTHENTICATION LINKS ===== -->
       <div class="navbar-nav ms-auto"  >
             <a class="nav-link" href="/Listings/new">NxtStay Your Home</a>
         <% if(!Curruser){ %>
+          <!-- Show Signup/Login when user is not logged in -->
           <a class="nav-link" href="/signup"><b>Sign up</b></a>
         <a class="nav-link" href="/login"><b>Log in</b></a>
         <% } %>
         
          <% if(Curruser){ %>
+          <!-- Show Logout when user is logged in -->
         <a class="nav-link"  href="/logout"><b>Log out</b></a>
         <% } %>
 

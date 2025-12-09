@@ -1,18 +1,23 @@
-mapboxgl.accessToken = mapToken;
+// ===== MAPBOX MAP CONFIGURATION =====
+// Displays property location on interactive map
 
+mapboxgl.accessToken = mapToken; // Mapbox API token from controller
+
+// Initialize map with property coordinates
 const map = new mapboxgl.Map({
-    container: 'map',
-    style:"mapbox://styles/mapbox/streets-v12",
-    center: Listing.geometry.coordinates,
-    zoom: 9
+    container: 'map', // HTML element ID
+    style:"mapbox://styles/mapbox/streets-v12", // Map style
+    center: Listing.geometry.coordinates, // [longitude, latitude]
+    zoom: 9 // Zoom level
 });
 
 
+// Add red marker pin at property location with popup
 const marker = new mapboxgl.Marker({color:"red"})
-    .setLngLat(Listing.geometry.coordinates)
-    .setPopup(new mapboxgl.Popup({offset: 25})
+    .setLngLat(Listing.geometry.coordinates) // Pin coordinates
+    .setPopup(new mapboxgl.Popup({offset: 25}) // Popup on click
     .setHTML(`<h3>${Listing.title}</h3><p>Exact Location will be provided after booking</p>`))
-    .addTo(map);
+    .addTo(map); // Add to map
 
 
      

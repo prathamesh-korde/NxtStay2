@@ -3,18 +3,20 @@ const mongoose = require("mongoose");
 const user = require("./user");
 const Schema = mongoose.Schema;
 
+// ===== REVIEW MODEL (RATING & COMMENT SCHEMA) =====
+// Database schema for property reviews
 const reviewSchema = new Schema({
-    comment:String,
-    rating:{
+    comment:String, // Review text
+    rating:{ // Star rating
         type:Number,
-        min:1,
-        max:5,
+        min:1, // 1 star minimum
+        max:5, // 5 stars maximum
     },
-    createdAt:{
+    createdAt:{ // Auto-generated timestamp
         type:Date,
         default: Date.now
     },
-    author:{
+    author:{ // User who wrote the review
         type: Schema.Types.ObjectId,
         ref:"User",
     }

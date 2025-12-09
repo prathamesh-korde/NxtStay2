@@ -1,11 +1,15 @@
+// ===== ENVIRONMENT CONFIGURATION =====
+// Load environment variables from .env file in development mode
 if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
+
+// ===== DEPENDENCIES =====
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const dbUrl = process.env.ATLASDB_URL;
-// const mongo_URL = "mongodb://127.0.0.1:27017/NxtStay";
+const dbUrl = process.env.ATLASDB_URL; // MongoDB Atlas cloud database URL
+// const mongo_URL = "mongodb://127.0.0.1:27017/NxtStay"; // Local database (not used)
 
 const path = require("path");
 const methodOverride = require("method-override");
@@ -33,33 +37,36 @@ main()
     console.log(err);
   });
 
+// ===== DATABASE CONNECTION =====
 async function main() {
   await mongoose.connect(dbUrl);
 }
 
-app.set("view engine","ejs");
-app.set("views",path.join(__dirname,"views"));
-app.use(express.urlencoded({ extended: true }));
-//middleware that parses URL-encoded data (from HTML forms) and makes it available in req.body.
-app.use(methodOverride("_method"));
-//Express app support HTTP methods like PUT, PATCH, and DELETE in places (like HTML forms) where only GET and POST are allowed.
-app.use(express.json()); 
-//Express app to automatically parse incoming JSON data in the request body and make it available as req.body.
-app.engine("ejs",ejsMate);
-app.use(express.static(path.join(__dirname,"/public")));
+// ===== VIEW ENGINE & MIDDLEWARE SETUP =====
+app.set("view engine","ejs"); // Use EJS for templates
+app.set("views",path.join(__dirname,"views")); // Set views directory
+app.use(express.urlencoded({ extended: true })); // Parse form data
+app.use(methodOverride("_method")); // Support PUT/DELETE methods in forms
+app.use(express.json()); // Parse JSON data
+app.engine("ejs",ejsMate); // Use ejs-mate for layouts
+app.use(express.static(path.join(__dirname,"/public"))); // Serve static files (CSS, JS, images)
 
 
+// ===== SESSION STORAGE IN MONGODB =====
+// Store user sessions in MongoDB for persistence across server restarts
 const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  touchAfter: 24 * 60 * 60, // time in seconds
+  mongoUrl: dbUrl, // Store sessions in MongoDB Atlas
+  touchAfter: 24 * 60 * 60, // Update session every 24 hours (86400 seconds)
   crypto: {
-    secret:process.env.SECRET,
+    secret:process.env.SECRET, // Encrypt session data
   } 
 });
 
 store.on("error", ()=>{
   console.log("Session store error"+ err);
 });
+
+// Session configuration options
 const options = {
   store,
   secret: process.env.SECRET ,
@@ -73,42 +80,34 @@ const options = {
 };
 
  
-app.use(Session(options));
-app.use(flash());
+// ===== SESSION & FLASH MESSAGES =====
+app.use(Session(options)); // Enable sessions
+app.use(flash()); // Enable flash messages for success/error notifications
 
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
+// ===== AUTHENTICATION SETUP (PASSPORT.JS) =====
+app.use(passport.initialize()); // Initialize passport
+app.use(passport.session()); // Enable persistent login sessions
+passport.use(new LocalStrategy(User.authenticate())); // Use username/password authentication
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.serializeUser(User.serializeUser()); // Store user in session
+passport.deserializeUser(User.deserializeUser()); // Retrieve user from session
 
+// Make flash messages and current user available in all templates
 app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.Curruser = req.user;
+  res.locals.success = req.flash("success"); // Success messages
+  res.locals.error = req.flash("error"); // Error messages
+  res.locals.Curruser = req.user; // Current logged-in user
   next();
 });
 
-// app.get("/demouser", async (req, res) => {
-//   try {
-//     let fakeUser = new User({
-//       email: "pratham0123@gmail.com", 
-//       username: "pratham",
-//     });
-
-//     let registeredUser = await User.register(fakeUser, "helloworld"); 
-//   } catch (e) {
-//     res.status(500).send(e.message); 
-//   }
-// });
-
-// Gemini API Proxy Route
+// ===== AI CHATBOT (GEMINI API) =====
+// Backend proxy route for AI chatbot - handles user messages and returns AI responses
 app.post("/api/chat", async (req, res) => {
   try {
     const { message, conversationHistory } = req.body;
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // Gemini API key from .env
     
+    // System context - defines chatbot's role and behavior
     const systemContext = `You are a helpful assistant for NxtStay, a vacation rental platform similar to Airbnb. Help users with booking properties, listing their homes, searching destinations, and answering questions about the platform. Be friendly, concise, and helpful.`;
 
     const response = await fetch(
@@ -135,26 +134,32 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-app.use("/Listings",Listings);
-app.use("/listings/:id/reviews",reviews);
-app.use("/",UserRoute);
+// ===== ROUTES =====
+app.use("/Listings",Listings); // Property listing routes (view all, create, edit, delete)
+app.use("/listings/:id/reviews",reviews); // Review routes (add, delete reviews)
+app.use("/",UserRoute); // User authentication routes (signup, login, logout)
 
-
+// ===== ERROR HANDLING =====
+// Handle 404 - Page not found
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page not found"));
 });
 
+// Global error handler - renders error page
 app.use((err,req,res,next) =>{
   let{status=500, message = "Something went wrong"} = err;
   res.status(status).render("listings/error.ejs",{message});
 })
 
+// ===== SERVER START =====
+// Start server only in development (not on Vercel serverless)
 if (process.env.VERCEL !== '1') {
   app.listen(8080, () => {
     console.log("Server listening on port 8080");
   });
 }
 
+// Export app for Vercel serverless deployment
 module.exports = app;
 
 

@@ -24,6 +24,7 @@ router.get("/new",islogin,(req,res)=>{
 })
 
 
+
 router
 .route("/:id")
 //Show route

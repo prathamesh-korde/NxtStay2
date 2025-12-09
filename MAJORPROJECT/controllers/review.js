@@ -1,6 +1,8 @@
 const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
 
+// ===== CREATE REVIEW =====
+// Adds new review to a listing with author information
 module.exports.createReview = async (req, res) => {
 
   if (!req.body.review) {
@@ -11,10 +13,10 @@ module.exports.createReview = async (req, res) => {
   let newReview = new Review(req.body.review);
 
 
-  newReview.author = req.user._id;
+  newReview.author = req.user._id; // Set current user as review author
   
 
-  listing.reviews.push(newReview);
+  listing.reviews.push(newReview); // Add review to listing's review array
 
   await newReview.save();
   await listing.save();
@@ -24,11 +26,13 @@ module.exports.createReview = async (req, res) => {
   res.redirect(`/listings/${listing._id}`);
 }
 
+// ===== DELETE REVIEW =====
+// Removes review from listing and deletes it from database
 module.exports.destroyReview = async(req,res)=>{
   let {id,reviewId} = req.params;
 
-  await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
-  await Review.findByIdAndDelete(reviewId);
+  await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}}); // Remove review ID from listing
+  await Review.findByIdAndDelete(reviewId); // Delete the review
 
   req.flash("success", "Review deleated successfully!");
 
